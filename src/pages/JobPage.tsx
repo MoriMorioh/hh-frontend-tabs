@@ -45,7 +45,6 @@ export function JobPage() {
 
   return (
     <div className={styles.pageWrapper}>
-
       <Header />
 
       <Container size="md" mt="xl" pb="xl">

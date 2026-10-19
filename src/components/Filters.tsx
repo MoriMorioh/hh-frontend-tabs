@@ -1,5 +1,13 @@
 import { useState, type KeyboardEvent } from 'react';
-import { Stack, TextInput, ActionIcon, Group, Pill, Text, Paper } from '@mantine/core';
+import {
+  Stack,
+  TextInput,
+  ActionIcon,
+  Group,
+  Pill,
+  Text,
+  Paper,
+} from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import styles from './Filters.module.css';
 

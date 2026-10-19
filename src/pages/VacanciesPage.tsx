@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useSearchParams, useParams, useNavigate, Navigate } from 'react-router-dom';
+import {
+  useSearchParams,
+  useParams,
+  useNavigate,
+  Navigate,
+} from 'react-router-dom';
 import {
   Container,
   TextInput,
@@ -35,7 +40,6 @@ export function VacanciesPage() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch<AppDispatch>();
-
 
   if (citySlug && !CITY_MAP[citySlug]) {
     return <Navigate to="/404" replace />;
@@ -176,8 +180,8 @@ export function VacanciesPage() {
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, md: 8, lg: 8.5 }}>
-            
-            <Tabs style={{ display: 'inline-block' }}
+            <Tabs
+              style={{ display: 'inline-block' }}
               value={citySlug || 'moscow'}
               onChange={handleTabChange}
               mb="md"
@@ -187,7 +191,7 @@ export function VacanciesPage() {
                 <Tabs.Tab value="petersburg">Санкт-Петербург</Tabs.Tab>
               </Tabs.List>
             </Tabs>
-            
+
             {isLoading && (
               <Loader size="xl" mx="auto" my="xl" display="block" />
             )}

@@ -11,7 +11,7 @@ import {
 import { Link } from 'react-router-dom';
 import { Header } from '../components/Header';
 import styles from '../App.module.css';
-import SadCat from '../img/sad-cat.gif'
+import SadCat from '../img/sad-cat.gif';
 
 export function NotFoundPage() {
   return (
@@ -29,7 +29,7 @@ export function NotFoundPage() {
               </Text>
             </Box>
             <Button
-              justify='center'
+              justify="center"
               component={Link}
               to="/vacancies/moscow"
               color="blue"
@@ -40,11 +40,7 @@ export function NotFoundPage() {
             </Button>
           </Group>
           <Box mt="lg" style={{ borderRadius: '12px', overflow: 'hidden' }}>
-            <Image
-              src={SadCat}
-              alt="404 Cat Gif"
-              radius="md"
-            />
+            <Image src={SadCat} alt="404 Cat Gif" radius="md" />
           </Box>
         </Paper>
       </Container>
