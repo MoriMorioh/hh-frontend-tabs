@@ -49,7 +49,7 @@ export const JobCard = ({ job }: JobCardProps) => {
 
         <Button
           component={Link}
-          to={`/vacancies/${job.id}`}
+          to={`/vacancies/job/${job.id}`}
           color="dark"
           radius="md"
           mt="xs"

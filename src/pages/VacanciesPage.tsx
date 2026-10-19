@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useParams, useNavigate, Navigate } from 'react-router-dom';
 import {
   Container,
   TextInput,
@@ -13,6 +13,7 @@ import {
   Text,
   Grid,
   Box,
+  Tabs,
 } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
 import { Header } from '../components/Header';
@@ -24,15 +25,29 @@ import styles from '../App.module.css';
 
 const LIMIT = 10;
 
+const CITY_MAP: Record<string, string> = {
+  moscow: 'Москва',
+  petersburg: 'Санкт-Петербург',
+};
+
 export function VacanciesPage() {
+  const { citySlug } = useParams<{ citySlug: string }>();
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch<AppDispatch>();
+
+
+  if (citySlug && !CITY_MAP[citySlug]) {
+    return <Navigate to="/404" replace />;
+  }
+
+  const currentCityName = CITY_MAP[citySlug || 'moscow'];
+
   const { jobs, isLoading, error, totalPages } = useSelector(
     (state: RootState) => state.jobs
   );
 
   const paramSearch = searchParams.get('search') || '';
-  const paramCity = searchParams.get('city') || 'Все';
   const paramSkills = searchParams.get('skills')
     ? searchParams.get('skills')!.split(',')
     : ['JavaScript', 'React', 'Redux', 'Python'];
@@ -40,13 +55,11 @@ export function VacanciesPage() {
 
   const [search, setSearch] = useState(paramSearch);
   const [activeSearch, setActiveSearch] = useState(paramSearch);
-  const [city, setCity] = useState(paramCity);
   const [skills, setSkills] = useState<string[]>(paramSkills);
   const [page, setPage] = useState(paramPage);
 
   useEffect(() => {
     const urlSearch = searchParams.get('search') || '';
-    const urlCity = searchParams.get('city') || 'Все';
     const urlSkills = searchParams.get('skills')
       ? searchParams.get('skills')!.split(',')
       : ['JavaScript', 'React', 'Redux', 'Python'];
@@ -54,14 +67,12 @@ export function VacanciesPage() {
 
     setSearch(urlSearch);
     setActiveSearch(urlSearch);
-    setCity(urlCity);
     setSkills(urlSkills);
     setPage(urlPage);
   }, [searchParams]);
 
   const updateQueryParams = (newParams: {
     search?: string;
-    city?: string;
     skills?: string[];
     page?: number;
   }) => {
@@ -69,15 +80,11 @@ export function VacanciesPage() {
 
     const currentSearch =
       newParams.search !== undefined ? newParams.search : activeSearch;
-    const currentCity = newParams.city !== undefined ? newParams.city : city;
     const currentSkills =
       newParams.skills !== undefined ? newParams.skills : skills;
     const currentPage = newParams.page !== undefined ? newParams.page : page;
 
     if (currentSearch) params.search = currentSearch;
-    if (currentCity && currentCity !== 'Все' && currentCity !== 'Все города') {
-      params.city = currentCity;
-    }
     if (currentSkills.length > 0) {
       params.skills = currentSkills.join(',');
     }
@@ -98,18 +105,26 @@ export function VacanciesPage() {
     dispatch(
       fetchJobs({
         search: activeSearch,
-        city: city === 'Все' || city === 'Все города' ? '' : city,
+        city: currentCityName,
         skills: skills.join(','),
         page,
         limit: LIMIT,
       })
     );
-  }, [dispatch, activeSearch, city, skills, page]);
+  }, [dispatch, activeSearch, currentCityName, skills, page]);
 
   const handleSearch = () => {
     setActiveSearch(search);
     setPage(1);
     updateQueryParams({ search, page: 1 });
+  };
+
+  const handleTabChange = (value: string | null) => {
+    if (value && value !== citySlug) {
+      setPage(1);
+      const currentQuery = searchParams.toString();
+      navigate(`/vacancies/${value}${currentQuery ? `?${currentQuery}` : ''}`);
+    }
   };
 
   return (
@@ -157,16 +172,22 @@ export function VacanciesPage() {
                 setPage(1);
                 updateQueryParams({ skills: newSkills, page: 1 });
               }}
-              city={city}
-              onCityChange={(newCity) => {
-                setCity(newCity);
-                setPage(1);
-                updateQueryParams({ city: newCity, page: 1 });
-              }}
             />
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, md: 8, lg: 8.5 }}>
+            
+            <Tabs style={{ display: 'inline-block' }}
+              value={citySlug || 'moscow'}
+              onChange={handleTabChange}
+              mb="md"
+            >
+              <Tabs.List>
+                <Tabs.Tab value="moscow">Москва</Tabs.Tab>
+                <Tabs.Tab value="petersburg">Санкт-Петербург</Tabs.Tab>
+              </Tabs.List>
+            </Tabs>
+            
             {isLoading && (
               <Loader size="xl" mx="auto" my="xl" display="block" />
             )}

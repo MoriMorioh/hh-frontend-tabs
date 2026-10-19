@@ -1,32 +1,14 @@
 import { useState, type KeyboardEvent } from 'react';
-import {
-  Stack,
-  TextInput,
-  ActionIcon,
-  Select,
-  Group,
-  Pill,
-  Text,
-  Paper,
-} from '@mantine/core';
-import { IconMapPin, IconPlus } from '@tabler/icons-react';
+import { Stack, TextInput, ActionIcon, Group, Pill, Text, Paper } from '@mantine/core';
+import { IconPlus } from '@tabler/icons-react';
 import styles from './Filters.module.css';
 
 interface FiltersProps {
   skills: string[];
   onSkillsChange: (skills: string[]) => void;
-  city: string;
-  onCityChange: (city: string) => void;
 }
 
-const CITIES = ['Все города', 'Москва', 'Санкт-Петербург'];
-
-export const Filters = ({
-  skills,
-  onSkillsChange,
-  city,
-  onCityChange,
-}: FiltersProps) => {
+export const Filters = ({ skills, onSkillsChange }: FiltersProps) => {
   const [skillInput, setSkillInput] = useState('');
 
   const handleAddSkill = () => {
@@ -90,20 +72,6 @@ export const Filters = ({
             </Pill>
           ))}
         </Pill.Group>
-      </Paper>
-
-      <Paper radius="lg" p="xs" px="md" className={styles.filterCard}>
-        <Select
-          leftSection={<IconMapPin size={18} color="#adb5bd" />}
-          placeholder="Все города"
-          data={CITIES}
-          value={city}
-          onChange={(val) => onCityChange(val || 'Все города')}
-          variant="unstyled"
-          size="sm"
-          comboboxProps={{ shadow: 'md', radius: 'md' }}
-          className={styles.citySelect}
-        />
       </Paper>
     </Stack>
   );
