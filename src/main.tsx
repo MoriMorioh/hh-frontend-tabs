@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { MantineProvider, createTheme } from '@mantine/core';
 import '@mantine/core/styles.css';
-import {RouterProvider } from 'react-router-dom';
 import { store } from './store/store';
-import { router } from './routes';
+import App from './App';
+import { BrowserRouter } from 'react-router-dom';
 
 const theme = createTheme({
   primaryColor: 'blue',
@@ -25,12 +25,11 @@ const theme = createTheme({
   },
 });
 
-
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Provider store={store}>
       <MantineProvider theme={theme}>
-        <RouterProvider router={router} />
+          <App />
       </MantineProvider>
     </Provider>
   </React.StrictMode>
